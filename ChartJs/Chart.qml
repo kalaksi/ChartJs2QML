@@ -21,7 +21,7 @@ Canvas {
     property var memorizedData
     property var memorizedOptions
     property alias animationRunning: chartAnimator.running
-    
+
     signal animationFinished()
 
     function animateToNewData()
@@ -66,10 +66,10 @@ Canvas {
             root.requestPaint();
         }
 
-        onClicked: {
+        onClicked: (mouse) => {
             submitEvent(mouse, "click");
         }
-        onPositionChanged: {
+        onPositionChanged: (mouse) => {
             submitEvent(mouse, "mousemove");
         }
         onExited: {
@@ -78,10 +78,10 @@ Canvas {
         onEntered: {
             submitEvent(undefined, "mouseenter");
         }
-        onPressed: {
+        onPressed: (mouse) => {
             submitEvent(mouse, "mousedown");
         }
-        onReleased: {
+        onReleased: (mouse) => {
             submitEvent(mouse, "mouseup");
         }
     }
