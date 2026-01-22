@@ -66,10 +66,10 @@ Canvas {
             root.requestPaint();
         }
 
-        onClicked: (mouse) => {
+        onClicked: function(mouse) {
             submitEvent(mouse, "click");
         }
-        onPositionChanged: (mouse) => {
+        onPositionChanged: function(mouse) {
             submitEvent(mouse, "mousemove");
         }
         onExited: {
@@ -78,10 +78,10 @@ Canvas {
         onEntered: {
             submitEvent(undefined, "mouseenter");
         }
-        onPressed: (mouse) => {
+        onPressed: function(mouse) {
             submitEvent(mouse, "mousedown");
         }
-        onReleased: (mouse) => {
+        onReleased: function(mouse) {
             submitEvent(mouse, "mouseup");
         }
     }
