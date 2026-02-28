@@ -103,26 +103,46 @@ Canvas {
         root.requestPaint();
     }
 
-    onPaint: {
-        if(root.getContext('2d') != null && memorizedContext != root.getContext('2d') || memorizedData != root.chartData || memorizedOptions != root.chartOptions) {
-            var ctx = root.getContext('2d');
+    onChartDataChanged: {
+        root.requestPaint();
+    }
 
+    onChartOptionsChanged: {
+        root.requestPaint();
+    }
+
+    onPaint: {
+        if (root.getContext('2d') === null) {
+            return;
+        }
+        var ctx = root.getContext('2d');
+        var contextChanged = (memorizedContext !== ctx);
+        var dataOrOptionsChanged = (memorizedData !== root.chartData || memorizedOptions !== root.chartOptions);
+
+        if (root.jsChart === undefined || contextChanged) {
             jsChart = new Chart.build(ctx, {
                 type: root.chartType,
                 data: root.chartData,
                 options: root.chartOptions
-                });
-
-            memorizedData = root.chartData ;
-            memorizedContext = root.getContext('2d');
+            });
+            memorizedData = root.chartData;
+            memorizedContext = ctx;
             memorizedOptions = root.chartOptions;
-
-            root.jsChart.bindEvents(function(newHandler) {event.handler = newHandler;});
-
+            root.jsChart.bindEvents(function(newHandler) { event.handler = newHandler; });
+            chartAnimator.start();
+        } else if (dataOrOptionsChanged) {
+            root.jsChart.data = root.chartData;
+            root.jsChart.config.options = root.chartOptions;
+            root.jsChart.options = root.chartOptions;
+            root.jsChart.update();
+            memorizedData = root.chartData;
+            memorizedOptions = root.chartOptions;
             chartAnimator.start();
         }
 
-        jsChart.draw(chartAnimationProgress);
+        if (root.jsChart !== undefined) {
+            jsChart.draw(chartAnimationProgress);
+        }
     }
 
     onWidthChanged: {
